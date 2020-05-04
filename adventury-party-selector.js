@@ -19,15 +19,15 @@
     let subFolderEles = "";
     var subFolders = CP_folder.children;
     subFolders.forEach(t => {
-        subFolderEles = subFolderEles.concat(`<option value="${t.data._id}">${t.data.name}</option>`)
+        subFolderEles = subFolderEles.concat(`<p><label><input type="checkbox" id="${t.data._id}" value="${t.data.name}" style="height:12px !important; margin-right:10px;"></input>${t.data.name}</label></p>`)
     });
 
-    const selectHeight = 17 * subFolders.length;
+    //const selectHeight = 17 * subFolders.length;
     let template = `
                     <form>
                         <div class="form-group">
                             <label>Select members to move</label>
-                            <select id="memberSelect" multiple  style="height:${selectHeight}px;">${subFolderEles}</select>
+                            <ul id="memberSelect" style="margin-top:-3px; margin-bottom: 0px;">${subFolderEles}</ul>
                         </div>
                     </form>`
 
@@ -62,7 +62,16 @@
                 icon: '<i class="fas fa-check"></i>',
                 label: "Select Subset",
                 callback: async (html) => {
-                    const foldersToMove = html.find('#memberSelect').val();
+                    var idSelector = function() { return this.id; };
+                    var checked = html.find('#memberSelect input:checked');
+                    var foldersToMove;
+                    if (checked.length == 1) {
+                        foldersToMove = Array(checked.attr('id'));
+                    } else if (checked.length > 1) {
+                        foldersToMove = checked.map(idSelector).get();
+                    } else {
+                        foldersToMove = [];
+                    }
 
                     let mberList = [];
                     foldersToMove.forEach(t => {
