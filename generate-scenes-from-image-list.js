@@ -16,7 +16,8 @@
 
 (async () => {
 
-var backgroundsToImport = ['ABANDONED CAVERN - GRID.mp4', 'ADMaps_DUNGEON SLAVE MARKET.mp4', 'ADMaps_TWISTED CAVES - GRID.mp4'];
+var backgroundsToImport = ["WIZARD'S TOWER - FIRST FLOOR [day] - GRID.mp4"];
+
 var parentFolderName = 'Animated maps - unused'
 var localFolder = 'animated_maps'
 
@@ -27,7 +28,14 @@ async function createSceneCustom (imgName) {
     var createData = {name: imgName, 
                       navigation: false, 
                       folder: parentFolder.data._id,
-                      img: imgPath};
+                      img: imgPath,
+                      width: 1920, 
+                      height: 1080,
+                      grid: 55,
+                      gridAlpha: 0,
+                      globalLight: true,
+                      shiftX : 0,
+                      shiftY : -5};
     var createdScene = await Scene.create(createData)
     BackgroundLayer.createThumbnail(createdScene.data.img).then(data => {
         createdScene.update({thumb: data.thumb});
@@ -41,3 +49,14 @@ backgroundsToImport.forEach(imgName => {
 
 })()
 
+/* Delete all scenes in a folder */
+(async () => {
+
+    var parentFolderName = 'Animated maps - unused'
+    var parentFolder = game.folders.filter(t => (t.data.name == parentFolderName))[0];
+
+    parentFolder.content.forEach(function(i){
+        Scene.delete(i._id)
+    })
+    
+})()
